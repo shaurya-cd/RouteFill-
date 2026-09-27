@@ -71,7 +71,7 @@ export class RecommendationService {
           pickup_city: pickupCity,
           dest_city: destCity,
           check_failed: 'Status',
-          reason: 'Load already booked or reserved by another carrier ❌',
+          reason: 'Load already booked or reserved by another carrier',
         });
         continue;
       }
@@ -85,7 +85,7 @@ export class RecommendationService {
           pickup_city: pickupCity,
           dest_city: destCity,
           check_failed: 'Capacity Suitability',
-          reason: `Too Heavy: Cargo weighs ${loadWeight} Tons, exceeding truck capacity of ${truckCap} Tons ❌`,
+          reason: `Too Heavy: Cargo weighs ${loadWeight} Tons, exceeding truck capacity of ${truckCap} Tons`,
         });
         continue;
       }
@@ -99,7 +99,7 @@ export class RecommendationService {
           pickup_city: pickupCity,
           dest_city: destCity,
           check_failed: 'Truck Type Compatibility',
-          reason: `Wrong Truck Type: Requires ${load.truckType?.name || 'specialized'} body, vehicle is ${truck.truckType?.name || 'standard'} ❌`,
+          reason: `Wrong Truck Type: Requires ${load.truckType?.name || 'specialized'} body, vehicle is ${truck.truckType?.name || 'standard'}`,
         });
         continue;
       }
@@ -115,7 +115,7 @@ export class RecommendationService {
             pickup_city: pickupCity,
             dest_city: destCity,
             check_failed: 'Timing Alignment',
-            reason: `Arrives Too Late: Pickup required before ${deadline.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}, truck reaches at ${truckArrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ❌`,
+            reason: `Arrives Too Late: Pickup required before ${deadline.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}, truck reaches at ${truckArrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
           });
           continue;
         }
@@ -137,7 +137,7 @@ export class RecommendationService {
             pickup_city: pickupCity,
             dest_city: destCity,
             check_failed: 'Deadhead Distance',
-            reason: `Pickup too distant: ${Math.round(pickupDist)} km away exceeds deadhead perimeter (${maxPickupDistanceKm} km) ❌`,
+            reason: `Pickup too distant: ${Math.round(pickupDist)} km away exceeds deadhead perimeter (${maxPickupDistanceKm} km)`,
           });
           continue;
         }
@@ -209,10 +209,10 @@ export class RecommendationService {
           ai_recommended: false,
           verdict: 'Shortest distance on paper (1,150 km), but 3.5 hrs slower due to heavy toll queues and industrial bottlenecks.',
           why_not_reasons: [
-            '⏱️ 3.5 Hours Slower: Severe bottlenecks near Bharuch Narmada Bridge & Surat ring road add 3.5+ hours of delays.',
-            '💰 ₹1,000 Higher Tolls: Cumulative toll cost is ₹2,500 across older plazas (vs ₹1,500 on Western Bypass).',
-            '⛽ Higher Idling Fuel Burn: Stop-and-go congestion creates excessive clutch wear and idling fuel consumption.',
-            '💡 Paper Distance Illusion: Appears 70 km shorter on paper, but driver loses net time, tolls, and operating profit.',
+            '3.5 Hours Slower: Severe bottlenecks near Bharuch Narmada Bridge & Surat ring road add 3.5+ hours of delays.',
+            '₹1,000 Higher Tolls: Cumulative toll cost is ₹2,500 across older plazas (vs ₹1,500 on Western Bypass).',
+            'Higher Idling Fuel Burn: Stop-and-go congestion creates excessive clutch wear and idling fuel consumption.',
+            'Paper Distance Illusion: Appears 70 km shorter on paper, but driver loses net time, tolls, and operating profit.',
           ],
           waypoints: [
             [19.0760, 72.8777], // Mumbai
@@ -236,7 +236,7 @@ export class RecommendationService {
           estimated_hours: 21.0,
           road_condition: 'Modern 6-lane high-speed expressway bypass with minimal bottlenecking',
           ai_recommended: true,
-          verdict: '⭐ RECOMMENDED ROUTE: The shortest route is not always best! Route B saves ₹1,000 in tolls and 3.5 hours in transit time with lower idling fuel burn.',
+          verdict: 'RECOMMENDED ROUTE: The shortest route is not always best! Route B saves ₹1,000 in tolls and 3.5 hours in transit time with lower idling fuel burn.',
           why_not_reasons: [],
           waypoints: [
             [19.0760, 72.8777], // Mumbai
@@ -265,9 +265,9 @@ export class RecommendationService {
           ai_recommended: false,
           verdict: 'Heavy commercial toll plazas with average 5+ hours delay at entry checkpoints.',
           why_not_reasons: [
-            '⏱️ 5.0 Hours Slower: Industrial checkposts and highway congestion add 5+ hours of delays.',
-            '💰 ₹1,000 Higher Tolls: Older toll barriers total ₹4,200 vs ₹3,200 on modern expressway sections.',
-            '⚠️ High Idling Risk: Heavy commercial density increases accident hazards and waiting times.',
+            '5.0 Hours Slower: Industrial checkposts and highway congestion add 5+ hours of delays.',
+            '₹1,000 Higher Tolls: Older toll barriers total ₹4,200 vs ₹3,200 on modern expressway sections.',
+            'High Idling Risk: Heavy commercial density increases accident hazards and waiting times.',
           ],
           waypoints: [
             [19.0760, 72.8777],
@@ -287,7 +287,7 @@ export class RecommendationService {
           estimated_hours: 24.0,
           road_condition: 'High-speed greenfield access-controlled expressway',
           ai_recommended: true,
-          verdict: '⭐ RECOMMENDED ROUTE: Saves 5 hours in travel time and ₹1,000 in tolls with smooth cruising.',
+          verdict: 'RECOMMENDED ROUTE: Saves 5 hours in travel time and ₹1,000 in tolls with smooth cruising.',
           why_not_reasons: [],
           waypoints: [
             [19.0760, 72.8777],
@@ -525,23 +525,23 @@ export class RecommendationService {
           load_weight_tons: Number(load.weight_tons),
           truck_type: truck.truckType?.name || 'Open Truck',
           utilization_pct: Math.round((Number(load.weight_tons) / Number(truck.capacity_tons)) * 100),
-          summary: `✅ Suitable: Load (${load.weight_tons}T) is within truck capacity (${truck.capacity_tons}T) with ${truck.truckType?.name || 'matching'} body.`,
+          summary: `Suitable: Load (${load.weight_tons}T) is within truck capacity (${truck.capacity_tons}T) with ${truck.truckType?.name || 'matching'} body.`,
         },
         pickup_distance: {
           distance_km: Math.round(pickupDist),
           evaluation: pickupDist <= 10 ? 'EXCELLENT' : pickupDist <= 35 ? 'GOOD' : 'POOR',
-          summary: `✅ Very Close: ${Math.round(pickupDist)} km deadhead empty travel to pickup hub.`,
+          summary: `Very Close: ${Math.round(pickupDist)} km deadhead empty travel to pickup hub.`,
         },
         timing_match: {
           passed: true,
           truck_arrival: 'Tomorrow, 4:00 PM',
           pickup_window: 'Tomorrow before 7:00 PM',
           buffer_hours: 3.0,
-          summary: '✅ Possible: Truck reaches Mumbai at 4 PM, leaving a 3-hour buffer before the 7 PM pickup deadline.',
+          summary: 'Possible: Truck reaches Mumbai at 4 PM, leaving a 3-hour buffer before the 7 PM pickup deadline.',
         },
         empty_travel_saved: {
           empty_km_avoided: 1400,
-          summary: '✅ 1,400 km empty deadhead eliminated: Instead of traveling empty from Mumbai back to north, truck carries paid return freight.',
+          summary: '1,400 km empty deadhead eliminated: Instead of traveling empty from Mumbai back to north, truck carries paid return freight.',
         },
         financial_net_profit: {
           offered_price: offeredRevenue,
@@ -550,8 +550,8 @@ export class RecommendationService {
           deadhead_cost: deadheadCost,
           net_profit: realProfit,
           summary: isJaipurCorridor
-            ? `✅ Real Net Profit: ₹${realProfit.toLocaleString('en-IN')} (Offered: ₹${offeredRevenue.toLocaleString('en-IN')} − Fuel/Toll: ₹${(fuelCost + tollCost).toLocaleString('en-IN')}). Yields higher actual profit than paper-heavy loads!`
-            : `⚠ Paper Price ₹${offeredRevenue.toLocaleString('en-IN')}, but high fuel & tolls (₹${(fuelCost + tollCost).toLocaleString('en-IN')}) reduce net profit to ₹${realProfit.toLocaleString('en-IN')}.`,
+            ? `Real Net Profit: ₹${realProfit.toLocaleString('en-IN')} (Offered: ₹${offeredRevenue.toLocaleString('en-IN')} − Fuel/Toll: ₹${(fuelCost + tollCost).toLocaleString('en-IN')}). Yields higher actual profit than paper-heavy loads!`
+            : `Paper Price ₹${offeredRevenue.toLocaleString('en-IN')}, but high fuel & tolls (₹${(fuelCost + tollCost).toLocaleString('en-IN')}) reduce net profit to ₹${realProfit.toLocaleString('en-IN')}.`,
         },
         historical_ai_learning: {
           past_trips_count: isJaipurCorridor ? 48 : 64,
@@ -559,8 +559,8 @@ export class RecommendationService {
           on_time_rate_pct: Math.round(historicalOnTimeRate * 100),
           avg_waiting_minutes: historicalAvgWait,
           summary: isJaipurCorridor
-            ? `🤖 AI Learning from 48 past trips: 95% completion rate, 94% on-time, avg waiting 30 mins, historical profit ₹16,000.`
-            : `🤖 AI Warning: Past data shows frequent 5+ hour delays and toll surcharges on this route, making real profit lower than expected.`,
+            ? `AI Learning from 48 past trips: 95% completion rate, 94% on-time, avg waiting 30 mins, historical profit ₹16,000.`
+            : `AI Warning: Past data shows frequent 5+ hour delays and toll surcharges on this route, making real profit lower than expected.`,
         },
       };
 
@@ -573,7 +573,7 @@ export class RecommendationService {
 
       let reason = 'High route compatibility, low pickup distance, and strong predicted net profitability.';
       if (isJaipurCorridor) {
-        reason = '🥇 BEST LOAD: Low deadhead (5 km), capacity matched (8T), timing aligned (+3 hr buffer), and highest real net profit (₹16,000) proven by past trips.';
+        reason = 'BEST LOAD: Low deadhead (5 km), capacity matched (8T), timing aligned (+3 hr buffer), and highest real net profit (₹16,000) proven by past trips.';
       } else if (isDelhiCorridor) {
         reason = 'Pays ₹35,000 on paper, but high tolls (₹4,200), high fuel (₹14,500), and 5-hour average waiting time yield lower real profit (₹15,000).';
       }

@@ -218,7 +218,7 @@ function Index() {
       const topRec = res.recommendations[0];
       if (topRec) {
         toast.success(`Generated ${res.recommendations.length} Intelligent Return Loads!`, {
-          description: `🥇 Best Load: ${topRec.load.pickup_location} → ${topRec.load.destination_location} (Expected Net Profit: ₹${Math.round(topRec.predicted_profit).toLocaleString('en-IN')})`,
+          description: `Best Load: ${topRec.load.pickup_location} → ${topRec.load.destination_location} (Expected Net Profit: ₹${Math.round(topRec.predicted_profit).toLocaleString('en-IN')})`,
         });
 
         // Set active load on the map
@@ -251,7 +251,7 @@ function Index() {
       const shaurya = trucks.find((t) => t.truck_number.toUpperCase().includes('DL01AB1234')) || trucks[0];
       if (shaurya) {
         setSelectedTruck(shaurya);
-        toast.info('Step 1: Truck Owner 🚛', {
+        toast.info('Step 1: Truck Owner', {
           description: 'Shaurya Transport (DL01AB1234, 10T Open Truck) is en route from Delhi to Mumbai, arriving tomorrow at 4 PM.',
         });
       }
@@ -260,7 +260,7 @@ function Index() {
 
       // Step 2: Load Poster (Loads waiting in Mumbai)
       setActiveStep(2);
-      toast.info('Step 2: Load Poster 📦', {
+      toast.info('Step 2: Load Poster', {
         description: 'Multiple shippers posted freight loads in Mumbai (Jaipur: ₹25k, Delhi: ₹35k, Pune: ₹18k). RouteFill AI will evaluate them.',
       });
 
@@ -290,8 +290,8 @@ function Index() {
           const recRoute = top.route_options?.find((r) => r.ai_recommended) || top.route_options?.[0];
           if (recRoute) setSelectedRoute(recRoute);
 
-          toast.success('Step 3: RouteFill AI Decision 🤖', {
-            description: '🥇 Best Load: Mumbai → Jaipur (₹16k net profit). 🗺️ Best Route: Route B (Western Bypass: saves ₹1,000 in tolls and 3.5h traffic!).',
+          toast.success('Step 3: RouteFill AI Decision', {
+            description: 'Best Load: Mumbai → Jaipur (₹16k net profit). Best Route: Route B (Western Bypass: saves ₹1,000 in tolls and 3.5h traffic!).',
           });
         }
       }
@@ -420,7 +420,7 @@ function Index() {
       toast.success(`Load Accepted! Order #RF-${rec.load_id} Active`, {
         description: `Shipper notified! Direct dispatch chat is live for ${pickupCity} → ${dropCity}.`,
         action: {
-          label: '💬 Open Chat',
+          label: 'Open Chat',
           onClick: () => handleOpenChat(rec.load_id, posterId, posterName, order),
         },
       });

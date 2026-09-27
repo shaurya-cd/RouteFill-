@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Truck, MapPin, Weight, ShieldCheck, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Truck, MapPin, Weight, ShieldCheck, ShieldAlert, CheckCircle2, Zap } from 'lucide-react';
 import { LocationInput, VerifiedLocation } from './LocationInput';
 import { useAuth } from '@/lib/authContext';
 
@@ -231,14 +231,14 @@ export const CreateTruckDialog: React.FC<Props> = ({ open, onOpenChange, onCreat
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary">
-              <Truck className="h-4 w-4" /> 1️⃣ Truck Owner Registration
+              <Truck className="h-4 w-4" /> Step 1: Truck Owner Registration
             </div>
             <button
               type="button"
               onClick={handleApplyPreset}
-              className="text-[11px] font-bold text-primary bg-primary/10 hover:bg-primary/20 border border-primary/30 px-2.5 py-1 rounded-xl transition-all cursor-pointer"
+              className="text-[11px] font-bold text-primary bg-primary/10 hover:bg-primary/20 border border-primary/30 px-2.5 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1"
             >
-              ⚡ Fill Shaurya Transport Preset
+              <Zap className="h-3.5 w-3.5 text-amber-500" /> Fill Shaurya Transport Preset
             </button>
           </div>
           <DialogTitle className="font-display text-xl font-bold tracking-tight mt-1">

@@ -246,7 +246,7 @@ export const PostLoadDialog: React.FC<Props> = ({ open, onOpenChange, onLoadCrea
         <DialogHeader className="space-y-1 text-left">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider font-semibold">
-              <Package className="h-4 w-4" /> 2️⃣ Load Poster Operations
+              <Package className="h-4 w-4" /> Step 2: Load Poster Operations
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] text-muted-foreground uppercase font-bold">Presets:</span>

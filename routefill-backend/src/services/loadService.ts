@@ -189,7 +189,7 @@ export class LoadService {
     // Dispatch notification to the Shipper (poster_id)
     await notificationService.createNotification({
       userId: load.poster_id,
-      title: 'Load Accepted! 🚛',
+      title: 'Load Accepted!',
       message: `${truck.truck_number} (${carrierUser.name}) accepted your freight shipment (${pickupCity} → ${dropCity}, ${load.weight_tons}T, ₹${Number(load.offered_price).toLocaleString('en-IN')}).`,
       type: NotificationTypeEnum.LOAD_ACCEPTED,
       data: {

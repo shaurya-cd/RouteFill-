@@ -18,6 +18,8 @@ import {
   Sparkles,
   MapPin,
   Clock,
+  Package,
+  CheckCircle2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -37,11 +39,11 @@ interface Props {
 }
 
 const PRESET_MESSAGES = [
-  '🚛 Truck is en route to pickup location',
-  '📍 Arrived at warehouse gate',
-  '📦 Cargo safely loaded, starting journey',
-  '⏱️ Estimated arrival in 2 hours',
-  '✅ Delivered and signed with consignee',
+  { icon: Truck, text: 'Truck is en route to pickup location' },
+  { icon: MapPin, text: 'Arrived at warehouse gate' },
+  { icon: Package, text: 'Cargo safely loaded, starting journey' },
+  { icon: Clock, text: 'Estimated arrival in 2 hours' },
+  { icon: CheckCircle2, text: 'Delivered and signed with consignee' },
 ];
 
 export const OrderChatDialog: React.FC<Props> = ({
@@ -148,16 +150,20 @@ export const OrderChatDialog: React.FC<Props> = ({
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground shrink-0 flex items-center gap-1">
             <Sparkles className="h-3 w-3 text-primary" /> Quick:
           </span>
-          {PRESET_MESSAGES.map((preset, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => handleSend(preset)}
-              className="text-[11px] font-medium bg-background border border-border/80 rounded-xl px-2.5 py-1 whitespace-nowrap text-foreground hover:bg-secondary hover:border-primary/50 transition-all cursor-pointer shadow-xs shrink-0"
-            >
-              {preset}
-            </button>
-          ))}
+          {PRESET_MESSAGES.map((preset, i) => {
+            const Icon = preset.icon;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handleSend(preset.text)}
+                className="text-[11px] font-medium bg-background border border-border/80 rounded-xl px-2.5 py-1 whitespace-nowrap text-foreground hover:bg-secondary hover:border-primary/50 transition-all cursor-pointer shadow-xs shrink-0 flex items-center gap-1.5"
+              >
+                <Icon className="h-3 w-3 text-primary shrink-0" />
+                <span>{preset.text}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Message Thread */}

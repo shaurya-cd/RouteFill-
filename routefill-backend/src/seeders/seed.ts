@@ -206,20 +206,20 @@ export async function seedDatabase() {
         pickup_end_time: dayAfter,
         status: LoadStatusEnum.AVAILABLE,
       },
-      // Filtered Load 1 (Step 1 ❌: Overweight - 15 Tons vs 10 Tons Truck Capacity)
+      // Filtered Load 1 (Step 1: Overweight - 15 Tons vs 10 Tons Truck Capacity)
       {
         poster_id: loadPoster2.id,
         pickup_location_id: locMap.get('Mumbai')!,
         destination_location_id: locMap.get('Ahmedabad')!,
         truck_type_id: openType.id,
-        weight_tons: 15.0, // ❌ OVERWEIGHT for 10-Ton truck!
+        weight_tons: 15.0, // OVERWEIGHT for 10-Ton truck!
         cargo_description: 'Heavy Structural Steel Beams',
         offered_price: 42000.0,
         pickup_start_time: tomorrowArrival,
         pickup_end_time: dayAfter,
         status: LoadStatusEnum.AVAILABLE,
       },
-      // Filtered Load 2 (Step 1 ❌: Timing Mismatch - Pickup required 12 PM, truck arrives 4 PM)
+      // Filtered Load 2 (Step 1: Timing Mismatch - Pickup required 12 PM, truck arrives 4 PM)
       {
         poster_id: loadPoster1.id,
         pickup_location_id: locMap.get('Mumbai')!,
@@ -229,7 +229,7 @@ export async function seedDatabase() {
         cargo_description: 'Perishable Dairy & Ice Cream Cargo',
         offered_price: 22000.0,
         pickup_start_time: now,
-        pickup_end_time: tomorrowPickup12PM, // ❌ Truck arrives at 4 PM, arrives too late!
+        pickup_end_time: tomorrowPickup12PM, // Truck arrives at 4 PM, arrives too late!
         status: LoadStatusEnum.AVAILABLE,
       },
       // Other India Loads

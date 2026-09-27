@@ -33,6 +33,14 @@ import {
   Pencil,
   Trash2,
   Plus,
+  Trophy,
+  Coins,
+  Scale,
+  BrainCircuit,
+  Star,
+  Lightbulb,
+  TrendingDown,
+  Check,
 } from 'lucide-react';
 import { MatchScore } from '@/components/logistics/MatchScore';
 import { OrderTrackingDashboard } from '@/components/logistics/OrderTrackingDashboard';
@@ -118,7 +126,7 @@ export const RightPanel: React.FC<Props> = ({
   const handleRouteClick = (route: RouteOptionModel) => {
     onSelectRoute?.(route);
     toast.info(`Switched to ${route.name}`, {
-      description: route.ai_recommended ? '⭐ AI Recommended optimal route selected' : 'Direct highway route selected',
+      description: route.ai_recommended ? 'AI Recommended optimal route selected' : 'Direct highway route selected',
     });
   };
 
@@ -179,36 +187,36 @@ export const RightPanel: React.FC<Props> = ({
             <button
               type="button"
               onClick={() => setShipperTab('shipments')}
-              className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer ${
+              className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                 shipperTab === 'shipments'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              📦 My Shipments ({loads.length})
+              <Package className="h-3.5 w-3.5 text-primary" /> My Shipments ({loads.length})
             </button>
             <button
               type="button"
               onClick={() => setShipperTab('carriers')}
-              className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer ${
+              className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                 shipperTab === 'carriers'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              🚛 Carriers Nearby ({availableTrucks.length})
+              <TruckIcon className="h-3.5 w-3.5 text-primary" /> Carriers Nearby ({availableTrucks.length})
             </button>
             {topRec && (
               <button
                 type="button"
                 onClick={() => setShipperTab('ai')}
-                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer ${
+                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                   shipperTab === 'ai'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                🧠 AI Engine
+                <BrainCircuit className="h-3.5 w-3.5 text-primary" /> AI Engine
               </button>
             )}
           </div>
@@ -218,46 +226,46 @@ export const RightPanel: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('decision')}
-                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer ${
+                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                   activeTab === 'decision'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                🥇 Best Load
+                <Trophy className="h-3.5 w-3.5 text-amber-500" /> Best Load
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('routes')}
-                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer ${
+                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                   activeTab === 'routes'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                🗺️ Best Route
+                <Navigation className="h-3.5 w-3.5 text-emerald-500" /> Best Route
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('comparison')}
-                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer ${
+                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                   activeTab === 'comparison'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                ⚖️ Compare (A/B/C)
+                <Scale className="h-3.5 w-3.5 text-blue-500" /> Compare
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('market')}
-                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer ${
+                className={`flex-1 rounded-lg py-1.5 text-center font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 ${
                   activeTab === 'market'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                📦 Market
+                <Layers className="h-3.5 w-3.5 text-purple-500" /> Market
               </button>
             </div>
           )
@@ -696,7 +704,7 @@ export const RightPanel: React.FC<Props> = ({
           </section>
         )}
 
-        {/* TAB 1: 🥇 BEST LOAD DECISION & 6 CHECKS */}
+        {/* TAB 1: BEST LOAD DECISION & 6 CHECKS */}
         {topRec && activeTab === 'decision' && (
           <section className="space-y-4">
             {/* Top Winner Card */}
@@ -706,7 +714,7 @@ export const RightPanel: React.FC<Props> = ({
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
-                    <Sparkles className="h-3 w-3" /> 🥇 Rank 1 AI Best Load
+                    <Sparkles className="h-3 w-3" /> <Trophy className="h-3 w-3 text-amber-300" /> Rank 1 AI Best Load
                   </span>
                   <span className="font-mono text-[10px] bg-white/15 px-2 py-0.5 rounded-md font-semibold">
                     Score: {topRec.final_score}/100
@@ -733,8 +741,8 @@ export const RightPanel: React.FC<Props> = ({
                     </p>
                   </div>
                   <div className="rounded-2xl bg-emerald-400/20 p-3 backdrop-blur-sm border border-emerald-300/30">
-                    <p className="text-[10px] uppercase font-bold tracking-wider text-emerald-200">
-                      Real Net Profit 💰
+                    <p className="text-[10px] uppercase font-bold tracking-wider text-emerald-200 flex items-center gap-1">
+                      Real Net Profit <Coins className="h-3 w-3 text-emerald-200" />
                     </p>
                     <p className="mt-0.5 font-display text-lg font-bold text-white">
                       ₹{Math.round(topRec.predicted_profit).toLocaleString('en-IN')}
@@ -762,7 +770,7 @@ export const RightPanel: React.FC<Props> = ({
                     }}
                     className="flex-1 rounded-2xl bg-white text-emerald-800 hover:bg-white/90 py-2.5 text-xs font-bold shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Accept Load ✅
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Accept Load
                   </Button>
                   <Button
                     variant="outline"
@@ -773,9 +781,9 @@ export const RightPanel: React.FC<Props> = ({
                         handleReject();
                       }
                     }}
-                    className="rounded-2xl border-white/30 bg-white/10 text-white hover:bg-white/20 py-2.5 text-xs font-semibold cursor-pointer"
+                    className="rounded-2xl border-white/30 bg-white/10 text-white hover:bg-white/20 py-2.5 text-xs font-semibold cursor-pointer flex items-center gap-1"
                   >
-                    Reject ❌
+                    <XCircle className="h-3.5 w-3.5 text-rose-300" /> Reject
                   </Button>
                   <Button
                     variant="outline"
@@ -800,7 +808,7 @@ export const RightPanel: React.FC<Props> = ({
                   <div className="rounded-2xl border border-border bg-card p-3 text-xs">
                     <div className="flex items-center justify-between font-bold">
                       <span>1. Is the truck suitable?</span>
-                      <span className="text-emerald-500 font-bold">✅ Suitable</span>
+                      <span className="text-emerald-500 font-bold inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Suitable</span>
                     </div>
                     <p className="mt-1 text-[11px] text-muted-foreground">
                       {topRec.six_checks.suitability.summary}
@@ -811,7 +819,7 @@ export const RightPanel: React.FC<Props> = ({
                   <div className="rounded-2xl border border-border bg-card p-3 text-xs">
                     <div className="flex items-center justify-between font-bold">
                       <span>2. Pickup Distance from Truck</span>
-                      <span className="text-emerald-500 font-bold">✅ 5 km (Very Good)</span>
+                      <span className="text-emerald-500 font-bold inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> 5 km (Very Good)</span>
                     </div>
                     <p className="mt-1 text-[11px] text-muted-foreground">
                       {topRec.six_checks.pickup_distance.summary}
@@ -822,7 +830,7 @@ export const RightPanel: React.FC<Props> = ({
                   <div className="rounded-2xl border border-border bg-card p-3 text-xs">
                     <div className="flex items-center justify-between font-bold">
                       <span>3. Does Timing Match?</span>
-                      <span className="text-emerald-500 font-bold">✅ Possible (+3 hr Buffer)</span>
+                      <span className="text-emerald-500 font-bold inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Possible (+3 hr Buffer)</span>
                     </div>
                     <p className="mt-1 text-[11px] text-muted-foreground">
                       {topRec.six_checks.timing_match.summary}
@@ -833,7 +841,7 @@ export const RightPanel: React.FC<Props> = ({
                   <div className="rounded-2xl border border-border bg-card p-3 text-xs">
                     <div className="flex items-center justify-between font-bold">
                       <span>4. Empty Travel Saved</span>
-                      <span className="text-emerald-500 font-bold">✅ 1,400 km Saved</span>
+                      <span className="text-emerald-500 font-bold inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> 1,400 km Saved</span>
                     </div>
                     <p className="mt-1 text-[11px] text-muted-foreground">
                       {topRec.six_checks.empty_travel_saved.summary}
@@ -869,7 +877,7 @@ export const RightPanel: React.FC<Props> = ({
                   <div className="rounded-2xl border border-primary/30 bg-primary/5 p-3 text-xs">
                     <div className="flex items-center justify-between font-bold">
                       <span className="text-primary">6. Where REAL AI Comes In</span>
-                      <span className="text-primary font-bold">🧠 Historical Learning</span>
+                      <span className="text-primary font-bold inline-flex items-center gap-1"><BrainCircuit className="h-3.5 w-3.5 text-primary" /> Historical Learning</span>
                     </div>
                     <p className="mt-1 text-[11px] text-muted-foreground">
                       {topRec.six_checks.historical_ai_learning.summary}
@@ -881,7 +889,7 @@ export const RightPanel: React.FC<Props> = ({
           </section>
         )}
 
-        {/* TAB 2: 🗺️ BEST ROUTE SELECTION (Route A vs Route B) */}
+        {/* TAB 2: BEST ROUTE SELECTION (Route A vs Route B) */}
         {topRec && activeTab === 'routes' && (
           <section className="space-y-4">
             <div className="rounded-2xl border border-primary/20 bg-primary/5 p-3.5">
@@ -924,7 +932,7 @@ export const RightPanel: React.FC<Props> = ({
                         </div>
                         {route.ai_recommended && (
                           <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold">
-                            <Sparkles className="h-3 w-3" /> ⭐ AI Recommended Route
+                            <Sparkles className="h-3 w-3" /> <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> AI Recommended Route
                           </span>
                         )}
                       </div>
@@ -1000,18 +1008,19 @@ export const RightPanel: React.FC<Props> = ({
                             </p>
                             <ul className="space-y-1.5 text-[11px] text-muted-foreground list-none pl-0">
                               {(route.why_not_reasons && route.why_not_reasons.length > 0 ? route.why_not_reasons : [
-                                '⏱️ 3.5 Hours Slower: Severe bottlenecks near Bharuch Narmada Bridge & Surat ring road add 3.5+ hours of delays.',
-                                '💰 ₹1,000 Higher Tolls: Cumulative toll cost is ₹2,500 across older plazas (vs ₹1,500 on Western Bypass).',
-                                '⛽ Stop-and-Go Fuel Idling: Continuous commercial congestion burns excessive idling fuel and wears brakes.',
-                                '💡 Distance Illusion: 70 km shorter on paper, but costs significantly more in time, tolls, and operating profit.'
+                                '3.5 Hours Slower: Severe bottlenecks near Bharuch Narmada Bridge & Surat ring road add 3.5+ hours of delays.',
+                                '₹1,000 Higher Tolls: Cumulative toll cost is ₹2,500 across older plazas (vs ₹1,500 on Western Bypass).',
+                                'Stop-and-Go Fuel Idling: Continuous commercial congestion burns excessive idling fuel and wears brakes.',
+                                'Distance Illusion: 70 km shorter on paper, but costs significantly more in time, tolls, and operating profit.'
                               ]).map((reason, rIdx) => (
                                 <li key={rIdx} className="flex items-start gap-1.5 leading-snug rounded-lg bg-background/70 p-1.5 border border-amber-500/20">
                                   <span>{reason}</span>
                                 </li>
                               ))}
                             </ul>
-                            <div className="rounded-xl bg-amber-500/10 p-2 text-[10px] text-amber-600 dark:text-amber-400 italic">
-                              💡 <strong>Key AI Takeaway:</strong> The shortest route on the map is not always the most profitable route in reality! Route B bypasses bottleneck zones, saving ₹1,000 in tolls and 3.5 hours in turnaround time.
+                            <div className="rounded-xl bg-amber-500/10 p-2 text-[10px] text-amber-600 dark:text-amber-400 italic flex items-start gap-1.5">
+                              <Lightbulb className="h-3.5 w-3.5 text-amber-500 shrink-0 mt-0.5" />
+                              <span><strong>Key AI Takeaway:</strong> The shortest route on the map is not always the most profitable route in reality! Route B bypasses bottleneck zones, saving ₹1,000 in tolls and 3.5 hours in turnaround time.</span>
                             </div>
                           </div>
                         )}
@@ -1026,11 +1035,12 @@ export const RightPanel: React.FC<Props> = ({
                           e.stopPropagation();
                           handleRouteClick(route);
                         }}
-                        className={`text-xs font-bold px-3 py-1 rounded-xl cursor-pointer ${
+                        className={`text-xs font-bold px-3 py-1 rounded-xl cursor-pointer flex items-center gap-1 ${
                           isSelected ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground hover:bg-secondary/80'
                         }`}
                       >
-                        {isSelected ? '✓ Active on Map' : route.ai_recommended ? 'Select Route' : 'Override & Select'}
+                        {isSelected && <Check className="h-3 w-3" />}
+                        {isSelected ? 'Active on Map' : route.ai_recommended ? 'Select Route' : 'Override & Select'}
                       </button>
                     </div>
                   </div>
@@ -1040,7 +1050,7 @@ export const RightPanel: React.FC<Props> = ({
           </section>
         )}
 
-        {/* TAB 3: ⚖️ CANDIDATE LOADS COMPARISON (A vs B vs C) */}
+        {/* TAB 3: CANDIDATE LOADS COMPARISON (A vs B vs C) */}
         {recommendations.length > 0 && activeTab === 'comparison' && (
           <section className="space-y-3">
             <div className="rounded-2xl border border-primary/20 bg-primary/5 p-3">
@@ -1112,7 +1122,7 @@ export const RightPanel: React.FC<Props> = ({
                           {rec.reason}
                         </p>
                         <div className="mt-1.5 text-[10px] text-amber-600 dark:text-amber-400 font-semibold flex items-center justify-between">
-                          <span>📉 Profit Deficit vs #1 Pick:</span>
+                          <span className="flex items-center gap-1"><TrendingDown className="h-3.5 w-3.5 text-amber-500" /> Profit Deficit vs #1 Pick:</span>
                           <span className="font-mono font-bold">-₹{(Math.round((topRec?.predicted_profit || 0) - rec.predicted_profit)).toLocaleString('en-IN')} net</span>
                         </div>
                       </div>
@@ -1150,7 +1160,7 @@ export const RightPanel: React.FC<Props> = ({
           </section>
         )}
 
-        {/* TAB 4: 📦 NEARBY MARKETPLACE LOADS */}
+        {/* TAB 4: NEARBY MARKETPLACE LOADS */}
         {(activeTab === 'market' || !topRec) && (
           <section className="space-y-3 pt-1">
             <div className="flex items-center justify-between">
@@ -1223,8 +1233,8 @@ export const RightPanel: React.FC<Props> = ({
                                 {l.destinationLocation?.name?.split(' ')[0] || 'Drop'}
                               </p>
                               {isTopPick && (
-                                <span className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0 text-[9px] font-bold">
-                                  🏆 #1 Pick
+                                <span className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0 text-[9px] font-bold flex items-center gap-1">
+                                  <Trophy className="h-2.5 w-2.5 text-emerald-400" /> #1 Pick
                                 </span>
                               )}
                               {!isTopPick && recMatch && (
@@ -1233,8 +1243,8 @@ export const RightPanel: React.FC<Props> = ({
                                 </span>
                               )}
                               {!isTopPick && !recMatch && flMatch && (
-                                <span className="rounded-full bg-destructive/20 text-destructive border border-destructive/30 px-1.5 py-0 text-[9px] font-bold">
-                                  ❌ Incompatible
+                                <span className="rounded-full bg-destructive/20 text-destructive border border-destructive/30 px-1.5 py-0 text-[9px] font-bold flex items-center gap-1">
+                                  <XCircle className="h-2.5 w-2.5 text-destructive" /> Incompatible
                                 </span>
                               )}
                             </div>
@@ -1271,8 +1281,9 @@ export const RightPanel: React.FC<Props> = ({
                             : 'Why Not This Load? (AI Diagnostic)'}
                           {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                         </button>
-                        <span className="text-[10px] text-muted-foreground">
-                          {isActive ? '✓ Selected on Map' : 'Click to preview'}
+                        <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                          {isActive && <Check className="h-3 w-3 text-primary" />}
+                          {isActive ? 'Selected on Map' : 'Click to preview'}
                         </span>
                       </div>
 
@@ -1280,7 +1291,10 @@ export const RightPanel: React.FC<Props> = ({
                         <div className="mt-2 rounded-xl bg-background/90 p-2.5 text-[11px] border border-border/70 space-y-1">
                           {isTopPick ? (
                             <div>
-                              <p className="font-bold text-emerald-500">🏆 Why This Load Is Selected:</p>
+                              <p className="font-bold text-emerald-500 flex items-center gap-1.5">
+                                <Trophy className="h-3.5 w-3.5 text-emerald-500" />
+                                Why This Load Is Selected:
+                              </p>
                               <p className="text-[10px] text-muted-foreground mt-0.5">
                                 Perfect 8-ton payload match, only 5 km deadhead to pickup, timing aligns with +3h buffer after Delhi arrival, and delivers highest proven net profit (₹16,000 real profit).
                               </p>
@@ -1294,8 +1308,9 @@ export const RightPanel: React.FC<Props> = ({
                               <p className="text-[10px] text-muted-foreground mt-0.5">
                                 {recMatch.reason}
                               </p>
-                              <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold mt-1">
-                                📉 Real Profit: ₹{Math.round(recMatch.predicted_profit).toLocaleString('en-IN')} (₹{(Math.round((topRec?.predicted_profit || 0) - recMatch.predicted_profit)).toLocaleString('en-IN')} less profit than #1 Pick).
+                              <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold mt-1 flex items-center gap-1">
+                                <TrendingDown className="h-3 w-3 text-amber-500" />
+                                Real Profit: ₹{Math.round(recMatch.predicted_profit).toLocaleString('en-IN')} (₹{(Math.round((topRec?.predicted_profit || 0) - recMatch.predicted_profit)).toLocaleString('en-IN')} less profit than #1 Pick).
                               </p>
                             </div>
                           ) : flMatch ? (

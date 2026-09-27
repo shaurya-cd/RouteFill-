@@ -276,7 +276,7 @@ export const MapCanvas: React.FC<Props> = ({
       const dLng = Number(inboundTrip.destinationLocation.longitude);
       if (!isNaN(oLat) && !isNaN(oLng) && !isNaN(dLat) && !isNaN(dLng)) {
         const inboundLine = L.polyline([[oLat, oLng], [dLat, dLng]], { color: '#38bdf8', weight: 3.5, dashArray: '8, 8', opacity: 0.85 });
-        inboundLine.bindTooltip(`🚛 Current Line-Haul: ${inboundTrip.originLocation.city || 'Delhi'} → ${inboundTrip.destinationLocation.city || 'Mumbai'}`, { sticky: true });
+        inboundLine.bindTooltip(`Current Line-Haul: ${inboundTrip.originLocation.city || 'Delhi'} → ${inboundTrip.destinationLocation.city || 'Mumbai'}`, { sticky: true });
         layerGroup.addLayer(inboundLine);
       }
     }
@@ -309,14 +309,14 @@ export const MapCanvas: React.FC<Props> = ({
             polyline.on('click', () => onSelectRoute?.(route));
 
             const tooltipContent = route.ai_recommended
-              ? `⭐ AI Recommended Route: ${route.name} (${route.distance_km} km · ${route.estimated_hours}h · ₹${route.toll_cost} tolls)`
-              : `⚠️ Why Not This Route? ${route.name} (+3.5h slower, +₹1,000 tolls). Click for AI diagnosis.`;
+              ? `AI Recommended Route: ${route.name} (${route.distance_km} km · ${route.estimated_hours}h · ₹${route.toll_cost} tolls)`
+              : `Alternative Route: ${route.name} (+3.5h slower, +₹1,000 tolls). Click for AI diagnosis.`;
             polyline.bindTooltip(tooltipContent, { sticky: true });
 
             polyline.bindPopup(`
               <div style="font-size: 12px; min-width: 170px;">
                 <div style="font-weight: bold; color: ${route.ai_recommended ? '#10b981' : '#f59e0b'};">
-                  ${route.ai_recommended ? '⭐ AI Recommended Route' : '⚠️ Alternative Route (Not Recommended)'}
+                  ${route.ai_recommended ? 'AI Recommended Route' : 'Alternative Route (Not Recommended)'}
                 </div>
                 <div style="color: #cbd5e1; margin-top: 2px;">${route.name}</div>
                 <div style="margin-top: 4px; font-size: 11px; color: #94a3b8;">
@@ -342,14 +342,14 @@ export const MapCanvas: React.FC<Props> = ({
 
         const pickupIcon = L.divIcon({
           className: 'pickup-3d-badge',
-          html: `<div style="background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; border: 1.5px solid #fca5a5; box-shadow: 0 10px 20px rgba(239,68,68,0.5), 0 0 12px rgba(239,68,68,0.6); transform: perspective(300px) rotateX(10deg);">📦 Pickup: ${pickupName}</div>`,
+          html: `<div style="background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 5px; border: 1.5px solid #fca5a5; box-shadow: 0 10px 20px rgba(239,68,68,0.5), 0 0 12px rgba(239,68,68,0.6); transform: perspective(300px) rotateX(10deg);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Pickup: ${pickupName}</div>`,
           iconSize: [115, 26], iconAnchor: [57, 13],
         });
         layerGroup.addLayer(L.marker([pLat, pLng], { icon: pickupIcon, zIndexOffset: 950 }));
 
         const dropIcon = L.divIcon({
           className: 'drop-3d-badge',
-          html: `<div style="background: linear-gradient(135deg, #10b981, #047857); color: white; padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; border: 1.5px solid #6ee7b7; box-shadow: 0 10px 20px rgba(16,185,129,0.5), 0 0 12px rgba(16,185,129,0.6); transform: perspective(300px) rotateX(10deg);">🏁 Delivery: ${destName}</div>`,
+          html: `<div style="background: linear-gradient(135deg, #10b981, #047857); color: white; padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 5px; border: 1.5px solid #6ee7b7; box-shadow: 0 10px 20px rgba(16,185,129,0.5), 0 0 12px rgba(16,185,129,0.6); transform: perspective(300px) rotateX(10deg);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg> Delivery: ${destName}</div>`,
           iconSize: [115, 26], iconAnchor: [57, 13],
         });
         layerGroup.addLayer(L.marker([dLat, dLng], { icon: dropIcon, zIndexOffset: 950 }));
