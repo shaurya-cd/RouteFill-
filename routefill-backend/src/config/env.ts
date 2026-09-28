@@ -22,9 +22,23 @@ if (isProduction) {
   }
 }
 
-let rawMlUrl = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000';
-if (rawMlUrl && !rawMlUrl.startsWith('http://') && !rawMlUrl.startsWith('https://')) {
-  rawMlUrl = `http://${rawMlUrl}`;
+let rawMlUrl = (process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000').trim();
+if (!rawMlUrl.startsWith('http://') && !rawMlUrl.startsWith('https://')) {
+  if (!rawMlUrl.includes('.') && rawMlUrl !== 'localhost') {
+    rawMlUrl = `https://${rawMlUrl}.onrender.com`;
+  } else {
+    rawMlUrl = `http://${rawMlUrl}`;
+  }
+} else {
+  try {
+    const parsed = new URL(rawMlUrl);
+    if (!parsed.hostname.includes('.') && parsed.hostname !== 'localhost' && parsed.hostname !== '127.0.0.1') {
+      parsed.hostname = `${parsed.hostname}.onrender.com`;
+      rawMlUrl = parsed.origin;
+    }
+  } catch {
+    // ignore
+  }
 }
 
 /**

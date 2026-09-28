@@ -53,10 +53,7 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: ML_SERVICE_URL
-        fromService:
-          name: routefill-ml-service
-          type: web
-          property: host
+        value: https://routefill-ml-service.onrender.com
       - key: CORS_ORIGIN
         value: "*"
 
