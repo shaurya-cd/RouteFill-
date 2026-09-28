@@ -32,7 +32,7 @@ services:
     rootDir: routefill-backend
     plan: free
     region: oregon
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: node dist/server.js
     healthCheckPath: /health
     envVars:
@@ -67,7 +67,7 @@ services:
     rootDir: routefill-canvas
     plan: free
     region: oregon
-    buildCommand: npm install && NITRO_PRESET=node-server npm run build
+    buildCommand: npm install --include=dev && NITRO_PRESET=node-server npm run build
     startCommand: node .output/server/index.mjs
     healthCheckPath: /
     envVars:
