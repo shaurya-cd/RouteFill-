@@ -22,6 +22,11 @@ if (isProduction) {
   }
 }
 
+let rawMlUrl = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000';
+if (rawMlUrl && !rawMlUrl.startsWith('http://') && !rawMlUrl.startsWith('https://')) {
+  rawMlUrl = `http://${rawMlUrl}`;
+}
+
 /**
  * Validated and hardened environment configurations.
  */
@@ -35,12 +40,12 @@ export const ENV = {
   DB_USER: process.env.DB_USER || 'postgres',
   DB_PASSWORD: process.env.DB_PASSWORD || 'root',
   DB_LOGGING: process.env.DB_LOGGING === 'true',
-  DB_SSL: process.env.DB_SSL === 'true' || isProduction,
-  DB_SSL_REJECT_UNAUTHORIZED: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+  DB_SSL: process.env.DB_SSL === 'true' || (isProduction && Boolean(process.env.DATABASE_URL)),
+  DB_SSL_REJECT_UNAUTHORIZED: process.env.DB_SSL_REJECT_UNAUTHORIZED === 'true',
   DB_SYNC: process.env.DB_SYNC ? process.env.DB_SYNC === 'true' : !isProduction,
   JWT_SECRET: rawJwtSecret,
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
-  ML_SERVICE_URL: process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000',
+  ML_SERVICE_URL: rawMlUrl,
   ML_SERVICE_TIMEOUT: parseInt(process.env.ML_SERVICE_TIMEOUT || '10000', 10),
   CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 mins
