@@ -80,7 +80,4 @@ services:
       - key: NITRO_HOST
         value: 0.0.0.0
       - key: VITE_API_URL
-        fromService:
-          name: routefill-backend
-          type: web
-          property: host
+        value: https://routefill-backend.onrender.com/api

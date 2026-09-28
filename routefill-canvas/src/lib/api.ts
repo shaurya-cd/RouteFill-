@@ -4,18 +4,38 @@
  */
 
 const getApiBase = (): string => {
-  const raw = (import.meta.env['VITE_API_URL'] as string | undefined)?.trim();
-  if (!raw) return 'http://localhost:5000/api';
+  let raw = (import.meta.env['VITE_API_URL'] as string | undefined)?.trim();
   
+  if (!raw) {
+    if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+      return 'https://routefill-backend.onrender.com/api';
+    }
+    return 'http://localhost:5000/api';
+  }
+
   let formatted = raw;
   if (!formatted.startsWith('http://') && !formatted.startsWith('https://') && !formatted.startsWith('/')) {
-    formatted = `https://${formatted}`;
+    if (!formatted.includes('.') && formatted !== 'localhost') {
+      formatted = `https://${formatted}.onrender.com`;
+    } else {
+      formatted = `https://${formatted}`;
+    }
+  } else {
+    try {
+      const parsed = new URL(formatted);
+      if (!parsed.hostname.includes('.') && parsed.hostname !== 'localhost' && parsed.hostname !== '127.0.0.1') {
+        parsed.hostname = `${parsed.hostname}.onrender.com`;
+        formatted = parsed.origin;
+      }
+    } catch {
+      // ignore
+    }
   }
-  
+
   if (!formatted.endsWith('/api')) {
     formatted = `${formatted.replace(/\/+$/, '')}/api`;
   }
-  
+
   return formatted;
 };
 
