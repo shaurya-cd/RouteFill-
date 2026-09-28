@@ -3,7 +3,23 @@
  * Wires routefill-canvas to routefill-backend (Port 5000) and python ML microservice (Port 8000).
  */
 
-const API_BASE = (import.meta.env['VITE_API_URL'] as string | undefined) || 'http://localhost:5000/api';
+const getApiBase = (): string => {
+  const raw = (import.meta.env['VITE_API_URL'] as string | undefined)?.trim();
+  if (!raw) return 'http://localhost:5000/api';
+  
+  let formatted = raw;
+  if (!formatted.startsWith('http://') && !formatted.startsWith('https://') && !formatted.startsWith('/')) {
+    formatted = `https://${formatted}`;
+  }
+  
+  if (!formatted.endsWith('/api')) {
+    formatted = `${formatted.replace(/\/+$/, '')}/api`;
+  }
+  
+  return formatted;
+};
+
+const API_BASE = getApiBase();
 
 export interface UserProfile {
   id: number;
