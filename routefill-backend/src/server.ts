@@ -1,6 +1,7 @@
 import { app } from './app';
 import { ENV } from './config/env';
 import { sequelize, setupAssociations } from './models';
+import { autoSeedIfEmpty } from './seeders/seed';
 import { logger } from './utils/logger';
 
 /**
@@ -22,6 +23,9 @@ async function startServer() {
     } else {
       logger.info('Database schema auto-sync skipped (production mode).');
     }
+
+    // Automatically seed necessary catalog data (Truck Types, Hub Locations, Roles) if empty
+    await autoSeedIfEmpty();
 
     const server = app.listen(ENV.PORT, () => {
       logger.info(`=======================================================`);

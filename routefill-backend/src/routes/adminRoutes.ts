@@ -39,6 +39,15 @@ router.get('/analytics', adminController.getAnalytics);
  *     security:
  *       - bearerAuth: []
  */
-router.get('/users', adminController.getAllUsers);
+/**
+ * @swagger
+ * /api/admin/seed:
+ *   post:
+ *     summary: Seed default reference tables (Truck Types, Hub Locations, Roles) into live database
+ *     tags: [Admin / ML]
+ *     security:
+ *       - bearerAuth: []
+ */
+router.post('/seed', adminController.seedDatabase);
 
 export default router;

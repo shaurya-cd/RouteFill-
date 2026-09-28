@@ -15,50 +15,68 @@ import { logger } from '../utils/logger';
 /**
  * Seeds comprehensive initial reference and historical training data into PostgreSQL.
  */
-export async function seedDatabase() {
+export async function seedDatabase(forceSync = false) {
   try {
     logger.info('Starting RouteFill AI database seeding...');
     await sequelize.authenticate();
     setupAssociations();
-    await sequelize.sync({ force: true }); // Clean slate for initial seed
-    logger.info('Clean database tables synchronized.');
+    if (forceSync) {
+      await sequelize.sync({ force: true }); // Clean slate if explicitly requested
+      logger.info('Clean database tables synchronized.');
+    } else {
+      await sequelize.sync({ alter: true });
+      logger.info('Database schema verified.');
+    }
 
     // 1. Seed Roles
-    const roles = await Role.bulkCreate([
-      { name: UserRoleEnum.ADMIN, description: 'Platform Administrator with system oversight' },
-      { name: UserRoleEnum.TRUCK_OWNER, description: 'Fleet owner or single-truck operator' },
-      { name: UserRoleEnum.LOAD_POSTER, description: 'Shipper, broker, or logistics enterprise' },
-    ], { returning: true });
-    const adminRole = roles.find((r) => r.name === UserRoleEnum.ADMIN)!;
-    const ownerRole = roles.find((r) => r.name === UserRoleEnum.TRUCK_OWNER)!;
-    const posterRole = roles.find((r) => r.name === UserRoleEnum.LOAD_POSTER)!;
+    const existingRoles = await Role.findAll();
+    let adminRole = existingRoles.find((r) => r.name === UserRoleEnum.ADMIN);
+    let ownerRole = existingRoles.find((r) => r.name === UserRoleEnum.TRUCK_OWNER);
+    let posterRole = existingRoles.find((r) => r.name === UserRoleEnum.LOAD_POSTER);
+
+    if (!adminRole || !ownerRole || !posterRole) {
+      const roles = await Role.bulkCreate([
+        { name: UserRoleEnum.ADMIN, description: 'Platform Administrator with system oversight' },
+        { name: UserRoleEnum.TRUCK_OWNER, description: 'Fleet owner or single-truck operator' },
+        { name: UserRoleEnum.LOAD_POSTER, description: 'Shipper, broker, or logistics enterprise' },
+      ], { returning: true });
+      adminRole = roles.find((r) => r.name === UserRoleEnum.ADMIN)!;
+      ownerRole = roles.find((r) => r.name === UserRoleEnum.TRUCK_OWNER)!;
+      posterRole = roles.find((r) => r.name === UserRoleEnum.LOAD_POSTER)!;
+    }
 
     // 2. Seed Truck Types
-    const truckTypes = await TruckType.bulkCreate([
-      { name: TruckTypeEnum.OPEN_TRUCK, description: 'Open body standard cargo truck' },
-      { name: TruckTypeEnum.CONTAINER, description: 'Enclosed weatherproof container body' },
-      { name: TruckTypeEnum.TANKER, description: 'Liquid/gas tanker vehicle' },
-      { name: TruckTypeEnum.REFRIGERATED, description: 'Temperature-controlled reefer vehicle' },
-    ], { returning: true });
+    let truckTypes = await TruckType.findAll();
+    if (truckTypes.length === 0) {
+      truckTypes = await TruckType.bulkCreate([
+        { name: TruckTypeEnum.OPEN_TRUCK, description: 'Open body standard cargo truck' },
+        { name: TruckTypeEnum.CONTAINER, description: 'Enclosed weatherproof container body' },
+        { name: TruckTypeEnum.TANKER, description: 'Liquid/gas tanker vehicle' },
+        { name: TruckTypeEnum.REFRIGERATED, description: 'Temperature-controlled reefer vehicle' },
+      ], { returning: true });
+    }
     const openType = truckTypes.find((t) => t.name === TruckTypeEnum.OPEN_TRUCK)!;
     const containerType = truckTypes.find((t) => t.name === TruckTypeEnum.CONTAINER)!;
     const reeferType = truckTypes.find((t) => t.name === TruckTypeEnum.REFRIGERATED)!;
 
     // 3. Seed Standard Indian Logistics Hub Locations
-    const locations = await Location.bulkCreate([
-      { name: 'Mumbai Nhava Sheva Hub', city: 'Mumbai', state: 'Maharashtra', country: 'India', latitude: 19.0760, longitude: 72.8777 },
-      { name: 'Delhi Sanjay Gandhi Transport Nagar', city: 'Delhi', state: 'Delhi', country: 'India', latitude: 28.7041, longitude: 77.1025 },
-      { name: 'Bengaluru Electronic City Cargo', city: 'Bengaluru', state: 'Karnataka', country: 'India', latitude: 12.9716, longitude: 77.5946 },
-      { name: 'Jaipur VKIA Industrial Area', city: 'Jaipur', state: 'Rajasthan', country: 'India', latitude: 26.9124, longitude: 75.7873 },
-      { name: 'Ahmedabad Changodar Freight Center', city: 'Ahmedabad', state: 'Gujarat', country: 'India', latitude: 23.0225, longitude: 72.5714 },
-      { name: 'Indore Dewas Naka Terminal', city: 'Indore', state: 'Madhya Pradesh', country: 'India', latitude: 22.7196, longitude: 75.8577 },
-      { name: 'Surat Ring Road Textile Hub', city: 'Surat', state: 'Gujarat', country: 'India', latitude: 21.1702, longitude: 72.8311 },
-      { name: 'Nagpur Multi-modal Logistics Park', city: 'Nagpur', state: 'Maharashtra', country: 'India', latitude: 21.1458, longitude: 79.0882 },
-      { name: 'Pune Bhosari MIDC Terminal', city: 'Pune', state: 'Maharashtra', country: 'India', latitude: 18.5204, longitude: 73.8567 },
-      { name: 'Hyderabad Auto Nagar Hub', city: 'Hyderabad', state: 'Telangana', country: 'India', latitude: 17.3850, longitude: 78.4867 },
-      { name: 'Chennai Port Freight Complex', city: 'Chennai', state: 'Tamil Nadu', country: 'India', latitude: 13.0827, longitude: 80.2707 },
-      { name: 'Kolkata Dankuni Transport Terminal', city: 'Kolkata', state: 'West Bengal', country: 'India', latitude: 22.5726, longitude: 88.3639 },
-    ], { returning: true });
+    let locations = await Location.findAll();
+    if (locations.length === 0) {
+      locations = await Location.bulkCreate([
+        { name: 'Mumbai Nhava Sheva Hub', city: 'Mumbai', state: 'Maharashtra', country: 'India', latitude: 19.0760, longitude: 72.8777 },
+        { name: 'Delhi Sanjay Gandhi Transport Nagar', city: 'Delhi', state: 'Delhi', country: 'India', latitude: 28.7041, longitude: 77.1025 },
+        { name: 'Bengaluru Electronic City Cargo', city: 'Bengaluru', state: 'Karnataka', country: 'India', latitude: 12.9716, longitude: 77.5946 },
+        { name: 'Jaipur VKIA Industrial Area', city: 'Jaipur', state: 'Rajasthan', country: 'India', latitude: 26.9124, longitude: 75.7873 },
+        { name: 'Ahmedabad Changodar Freight Center', city: 'Ahmedabad', state: 'Gujarat', country: 'India', latitude: 23.0225, longitude: 72.5714 },
+        { name: 'Indore Dewas Naka Terminal', city: 'Indore', state: 'Madhya Pradesh', country: 'India', latitude: 22.7196, longitude: 75.8577 },
+        { name: 'Surat Ring Road Textile Hub', city: 'Surat', state: 'Gujarat', country: 'India', latitude: 21.1702, longitude: 72.8311 },
+        { name: 'Nagpur Multi-modal Logistics Park', city: 'Nagpur', state: 'Maharashtra', country: 'India', latitude: 21.1458, longitude: 79.0882 },
+        { name: 'Pune Bhosari MIDC Terminal', city: 'Pune', state: 'Maharashtra', country: 'India', latitude: 18.5204, longitude: 73.8567 },
+        { name: 'Hyderabad Auto Nagar Hub', city: 'Hyderabad', state: 'Telangana', country: 'India', latitude: 17.3850, longitude: 78.4867 },
+        { name: 'Chennai Port Freight Complex', city: 'Chennai', state: 'Tamil Nadu', country: 'India', latitude: 13.0827, longitude: 80.2707 },
+        { name: 'Kolkata Dankuni Transport Terminal', city: 'Kolkata', state: 'West Bengal', country: 'India', latitude: 22.5726, longitude: 88.3639 },
+      ], { returning: true });
+    }
 
     const locMap = new Map(locations.map((l) => [l.city, l.id]));
 
@@ -321,11 +339,34 @@ export async function seedDatabase() {
     logger.info('=======================================================');
   } catch (error: any) {
     logger.error('Database seeding failed:', error);
-    process.exit(1);
+    if (forceSync) {
+      process.exit(1);
+    }
+  }
+}
+
+/**
+ * Checks if essential catalog data is present in PostgreSQL; if empty, automatically seeds it.
+ */
+export async function autoSeedIfEmpty(): Promise<void> {
+  try {
+    const roleCount = await Role.count();
+    const truckTypeCount = await TruckType.count();
+    const locationCount = await Location.count();
+
+    if (roleCount === 0 || truckTypeCount === 0 || locationCount === 0) {
+      logger.info(`Database catalog empty (Roles: ${roleCount}, TruckTypes: ${truckTypeCount}, Locations: ${locationCount}). Auto-seeding initial data...`);
+      await seedDatabase(false);
+      logger.info('Live PostgreSQL database catalog auto-seeded successfully.');
+    } else {
+      logger.info(`Live database verified (Roles: ${roleCount}, TruckTypes: ${truckTypeCount}, Locations: ${locationCount}).`);
+    }
+  } catch (error: any) {
+    logger.warn('Auto-seed verification warning:', error?.message);
   }
 }
 
 // Allow direct CLI execution
 if (require.main === module) {
-  seedDatabase().then(() => process.exit(0));
+  seedDatabase(true).then(() => process.exit(0));
 }

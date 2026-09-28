@@ -51,6 +51,23 @@ export class AdminController {
       next(error);
     }
   }
+
+  /**
+   * Seeds/populates initial reference data (Truck Types, Hub Locations, Roles, and sample records).
+   */
+  public async seedDatabase(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { force } = req.body || {};
+      const { seedDatabase } = await import('../seeders/seed');
+      await seedDatabase(force === true);
+      res.status(200).json({
+        success: true,
+        message: 'Live database populated with reference catalogs, truck types, and logistics hubs.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const adminController = new AdminController();
