@@ -62,7 +62,7 @@ services:
 
   # 3. Web Canvas UI Frontend (TanStack Start SSR Node Server)
   - type: web
-    name: routefill-canvas
+    name: routefill-ui
     runtime: node
     rootDir: routefill-canvas
     plan: free
