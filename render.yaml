@@ -60,18 +60,25 @@ services:
       - key: CORS_ORIGIN
         value: "*"
 
-  # 3. Web Canvas UI Frontend (Static Site)
+  # 3. Web Canvas UI Frontend (TanStack Start SSR Node Server)
   - type: web
     name: routefill-canvas
-    runtime: static
+    runtime: node
     rootDir: routefill-canvas
-    buildCommand: npm install && npm run build
-    staticPublishPath: .output/public
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    plan: free
+    region: oregon
+    buildCommand: npm install && NITRO_PRESET=node-server npm run build
+    startCommand: node .output/server/index.mjs
+    healthCheckPath: /
     envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NITRO_PORT
+        value: 10000
+      - key: NITRO_HOST
+        value: 0.0.0.0
       - key: VITE_API_URL
         fromService:
           name: routefill-backend
