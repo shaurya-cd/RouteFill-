@@ -70,12 +70,13 @@ export function errorHandler(
 
   // 5. Unhandled / internal server errors
   logger.error('Unhandled Internal Server Error:', err);
+  const isProd = process.env.NODE_ENV === 'production';
   res.status(500).json({
     success: false,
     error: {
-      message: err?.message || 'Internal Server Error',
+      message: isProd ? 'An unexpected internal server error occurred' : (err?.message || 'Internal Server Error'),
       statusCode: 500,
-      stack: process.env.NODE_ENV === 'production' ? undefined : err?.stack,
+      stack: isProd ? undefined : err?.stack,
     },
   });
 }

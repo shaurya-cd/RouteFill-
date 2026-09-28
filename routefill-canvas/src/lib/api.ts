@@ -386,7 +386,7 @@ class ApiClient {
     return res.data;
   }
 
-  async login(email: string, password = 'password123'): Promise<{ token: string; user: UserProfile }> {
+  async login(email: string, password: string): Promise<{ token: string; user: UserProfile }> {
     const res = await this.request<{ success: boolean; data: { token: string; user: UserProfile } }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),

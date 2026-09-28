@@ -15,9 +15,13 @@ async function startServer() {
     // Initialize relational associations
     setupAssociations();
 
-    // Sync database schema (safe alter)
-    await sequelize.sync({ alter: true });
-    logger.info('Database models synchronized with PostgreSQL schema.');
+    // Sync database schema when enabled (safe alter in development)
+    if (ENV.DB_SYNC) {
+      await sequelize.sync({ alter: true });
+      logger.info('Database models synchronized with PostgreSQL schema.');
+    } else {
+      logger.info('Database schema auto-sync skipped (production mode).');
+    }
 
     const server = app.listen(ENV.PORT, () => {
       logger.info(`=======================================================`);

@@ -4,8 +4,10 @@ Provides dead-mileage forecasting, owner acceptance prediction, trip success est
 and net real-world profit regression.
 """
 
+import os
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import prediction, training
@@ -30,13 +32,38 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS configuration
+raw_cors = os.getenv("CORS_ORIGIN", "*")
+allowed_origins = [o.strip() for o in raw_cors.split(",") if o.strip()]
+if "*" in allowed_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """
+    Catches unhandled exceptions to prevent internal code trace leakage.
+    """
+    print(f"[ERROR] ML Service Exception: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"success": False, "error": "ML Inference Service Error", "detail": str(exc)}
+    )
+
 
 app.include_router(prediction.router)
 app.include_router(training.router)

@@ -151,7 +151,8 @@ class TrainingService:
         Trains the full model suite on historical data, serializes Joblib files,
         and computes comprehensive validation metrics.
         """
-        version = version_tag or f"v1.{int(datetime.now().timestamp()) % 10000}"
+        raw_version = version_tag or f"v1.{int(datetime.now().timestamp()) % 10000}"
+        version = os.path.basename(raw_version) or "v1.0"
         save_path = os.path.join(self.artifacts_dir, version)
         os.makedirs(save_path, exist_ok=True)
 

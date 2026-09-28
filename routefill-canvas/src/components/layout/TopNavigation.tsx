@@ -1,8 +1,9 @@
-import { Truck, Shield, Menu, Search, LogIn, LogOut, Package, Plus } from 'lucide-react';
+import { Shield, Menu, Search, LogIn, LogOut, Package, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/authContext';
 import { NotificationDropdown } from './NotificationDropdown';
+import { RouteFillLogo } from '@/components/common/RouteFillLogo';
 
 interface Props {
   onOpenSidebar: () => void;
@@ -47,26 +48,18 @@ export const TopNavigation: React.FC<Props> = ({
         <button
           type="button"
           onClick={onOpenSidebar}
-          className="flex shrink-0 items-center gap-2.5 rounded-2xl border border-card/60 bg-card/85 px-3 py-1.5 shadow-xl backdrop-blur-xl hover:bg-card hover:border-primary/40 hover:shadow-2xl transition-all duration-200 cursor-pointer group"
+          className="flex shrink-0 items-center gap-2 rounded-2xl border border-card/60 bg-card/85 px-2.5 sm:px-3 py-1.5 shadow-xl backdrop-blur-xl hover:bg-card hover:border-primary/40 hover:shadow-2xl transition-all duration-200 cursor-pointer group"
           title="Open Fleet Operations & Menu"
         >
-          <div className="relative">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-md group-hover:scale-105 transition-transform">
-              <Truck className="h-4 w-4" />
+          <RouteFillLogo size="xs" showText={false} />
+          <div className="text-left hidden sm:flex items-center gap-1.5">
+            <span className="font-display text-xs sm:text-sm font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+              Route<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Fill</span>
             </span>
-            <span className="absolute -bottom-1 -right-1 grid h-3.5 w-3.5 place-items-center rounded-full bg-background border border-border text-foreground shadow-sm">
-              <Menu className="h-2 w-2 text-primary" />
+            <span className="rounded-md bg-primary/15 text-primary px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider flex items-center gap-0.5">
+              <Menu className="h-2.5 w-2.5" />
+              Menu
             </span>
-          </div>
-          <div className="text-left hidden sm:block">
-            <div className="flex items-center gap-1.5">
-              <p className="font-display text-xs sm:text-sm font-bold tracking-tight group-hover:text-primary transition-colors">
-                RouteFill AI
-              </p>
-              <span className="rounded-md bg-primary/15 text-primary px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider">
-                Menu
-              </span>
-            </div>
           </div>
         </button>
 

@@ -35,6 +35,7 @@ export class Load extends Model {
   declare pickupLocation?: any;
   declare destinationLocation?: any;
   declare truckType?: any;
+  declare assignedTruck?: any;
 }
 
 Load.init(

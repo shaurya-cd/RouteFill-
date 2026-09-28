@@ -5,7 +5,7 @@ export class ChatController {
   public async getMessages(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const loadId = parseInt(req.params.loadId, 10);
-      const messages = await chatService.getMessages(loadId);
+      const messages = await chatService.getMessages(loadId, req.user);
       res.status(200).json({
         success: true,
         count: messages.length,

@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { RouteFillLogo } from "@/components/common/RouteFillLogo";
 import {
   Truck,
   Plus,
@@ -74,20 +75,18 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
         {/* Header */}
         <SheetHeader className="p-5 pb-4 border-b border-border/60 bg-muted/20 text-left">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20">
-              <Truck className="h-5 w-5" />
-            </span>
+            <RouteFillLogo size="md" showText={false} />
             <div className="min-w-0 flex-1">
               <SheetTitle className="font-display text-base font-bold tracking-tight flex items-center gap-2">
-                RouteFill AI
-                <Badge variant="secondary" className="text-[10px] font-mono font-medium px-1.5 py-0 h-4">
-                  v1.0
-                </Badge>
+                Route<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Fill</span>
+                {/* <Badge variant="secondary" className="text-[10px] font-mono font-medium px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/30">
+                  AI v1.0
+                </Badge> */}
               </SheetTitle>
-              <SheetDescription className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
+              {/* <SheetDescription className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
                 Live 3NF PostgreSQL + FastAPI ML
-              </SheetDescription>
+              </SheetDescription> */}
             </div>
           </div>
         </SheetHeader>
@@ -250,7 +249,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
 
           {/* Architecture Details */}
-          <div className="rounded-2xl border border-border/60 bg-muted/10 p-3.5 space-y-2 text-xs">
+          {/* <div className="rounded-2xl border border-border/60 bg-muted/10 p-3.5 space-y-2 text-xs">
             <p className="font-semibold text-foreground text-[11px] flex items-center gap-1.5">
               <Database className="h-3.5 w-3.5 text-primary" />
               System Architecture
@@ -271,7 +270,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Footer: User Account & Role Switch / Login Options */}

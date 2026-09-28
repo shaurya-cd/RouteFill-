@@ -102,7 +102,7 @@ export class TruckController {
     try {
       const id = parseInt(req.params.id, 10);
       const isAdmin = req.user?.roles.includes('ADMIN');
-      const ownerId = isAdmin ? undefined : (req.user?.id || 2);
+      const ownerId = isAdmin ? undefined : req.user?.id;
       const updated = await truckService.updateTruck(id, ownerId, req.body);
       res.status(200).json({
         success: true,
@@ -121,7 +121,7 @@ export class TruckController {
     try {
       const id = parseInt(req.params.id, 10);
       const isAdmin = req.user?.roles.includes('ADMIN');
-      const ownerId = isAdmin ? undefined : (req.user?.id || 2);
+      const ownerId = isAdmin ? undefined : req.user?.id;
       const result = await truckService.deleteTruck(id, ownerId);
       res.status(200).json({
         success: true,

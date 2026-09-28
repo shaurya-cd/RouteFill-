@@ -165,11 +165,20 @@ export class LoadService {
    */
   public async acceptLoad(loadId: number, carrierUser: any, truckId: number, recommendationId?: number) {
     const load = await this.getLoadById(loadId);
+    if (load.status !== LoadStatusEnum.AVAILABLE) {
+      throw new ForbiddenError(`Load #${loadId} is not available for booking (current status: ${load.status})`);
+    }
+
     const truck = await Truck.findByPk(truckId, {
       include: [{ model: User, as: 'owner' }],
     });
     if (!truck) {
       throw new NotFoundError(`Truck ID ${truckId} not found`);
+    }
+
+    const isAdmin = Array.isArray(carrierUser.roles) && carrierUser.roles.includes('ADMIN');
+    if (!isAdmin && truck.owner_id !== carrierUser.id) {
+      throw new ForbiddenError('Unauthorized: You can only assign loads to trucks belonging to your fleet');
     }
 
     // Update load status to ASSIGNED and assign truck

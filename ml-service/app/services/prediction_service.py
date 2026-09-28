@@ -33,26 +33,32 @@ class PredictionService:
         """
         Loads the latest serialized model bundle from the artifacts directory if present.
         """
-        version_file = os.path.join(self.artifacts_dir, "current_version.txt")
-        if os.path.exists(version_file):
-            with open(version_file, "r") as f:
-                self.version = f.read().strip()
+        try:
+            version_file = os.path.join(self.artifacts_dir, "current_version.txt")
+            if os.path.exists(version_file):
+                with open(version_file, "r") as f:
+                    raw_v = f.read().strip()
+                    # Sanitize version against directory traversal
+                    self.version = os.path.basename(raw_v) or "v1.0"
 
-        model_path = os.path.join(self.artifacts_dir, self.version)
-        if os.path.exists(model_path):
-            dm_file = os.path.join(model_path, "dead_mileage_model.joblib")
-            acc_file = os.path.join(model_path, "acceptance_model.joblib")
-            succ_file = os.path.join(model_path, "success_model.joblib")
-            prof_file = os.path.join(model_path, "profit_model.joblib")
+            model_path = os.path.join(self.artifacts_dir, self.version)
+            if os.path.exists(model_path):
+                dm_file = os.path.join(model_path, "dead_mileage_model.joblib")
+                acc_file = os.path.join(model_path, "acceptance_model.joblib")
+                succ_file = os.path.join(model_path, "success_model.joblib")
+                prof_file = os.path.join(model_path, "profit_model.joblib")
 
-            if os.path.exists(dm_file):
-                self.dead_mileage_model = joblib.load(dm_file)
-            if os.path.exists(acc_file):
-                self.acceptance_model = joblib.load(acc_file)
-            if os.path.exists(succ_file):
-                self.success_model = joblib.load(succ_file)
-            if os.path.exists(prof_file):
-                self.profit_model = joblib.load(prof_file)
+                if os.path.exists(dm_file):
+                    self.dead_mileage_model = joblib.load(dm_file)
+                if os.path.exists(acc_file):
+                    self.acceptance_model = joblib.load(acc_file)
+                if os.path.exists(succ_file):
+                    self.success_model = joblib.load(succ_file)
+                if os.path.exists(prof_file):
+                    self.profit_model = joblib.load(prof_file)
+        except Exception as e:
+            # Fallback to internal heuristic models if artifact loading fails
+            print(f"[WARN] Failed to load serialized ML models: {e}. Using default mathematical models.")
 
     def predict_dead_mileage(self, trip_data: Dict[str, Any]) -> Dict[str, Any]:
         """

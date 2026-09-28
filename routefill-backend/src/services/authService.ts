@@ -26,6 +26,12 @@ export class AuthService {
       throw new ConflictError('A user with this email address already exists');
     }
 
+    // Prevent privilege escalation to ADMIN
+    const requestedRole = dto.role || UserRoleEnum.TRUCK_OWNER;
+    if (requestedRole === UserRoleEnum.ADMIN) {
+      throw new BadRequestError('Admin accounts cannot be created via public registration');
+    }
+
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(dto.password, salt);
 
@@ -38,7 +44,7 @@ export class AuthService {
     });
 
     // Assign role
-    const targetRoleName = dto.role || UserRoleEnum.TRUCK_OWNER;
+    const targetRoleName = requestedRole;
     let role = await Role.findOne({ where: { name: targetRoleName } });
     if (!role) {
       role = await Role.create({

@@ -4,9 +4,11 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import { ENV } from './config/env';
+import { sequelize } from './models';
 import apiRouter from './routes';
 import { swaggerSpec } from './docs/swagger';
 import { errorHandler } from './middleware/errorMiddleware';
+import { globalRateLimiter } from './middleware/rateLimitMiddleware';
 import { mlClient } from './clients/mlClient';
 
 /**
@@ -17,11 +19,23 @@ export function createApp(): Application {
 
   // Security headers & CORS
   app.use(helmet({ contentSecurityPolicy: false }));
-  app.use(cors({ origin: ENV.CORS_ORIGIN, credentials: true }));
+
+  const allowedOrigins = ENV.CORS_ORIGIN.split(',').map((o) => o.trim());
+  const corsOptions: cors.CorsOptions = {
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
 
   // Request parsing & telemetry
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: '5mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '5mb' }));
   if (ENV.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
   }
@@ -33,16 +47,31 @@ export function createApp(): Application {
   });
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-  // Health and readiness check
+  // Comprehensive health and readiness check for cloud orchestrators
   app.get('/health', async (req: Request, res: Response) => {
+    let dbStatus = 'UP';
+    let dbError: string | undefined = undefined;
+    try {
+      await sequelize.authenticate();
+    } catch (err: any) {
+      dbStatus = 'DOWN';
+      dbError = err?.message;
+    }
+
     const mlHealth = await mlClient.checkHealth();
-    res.status(200).json({
-      status: 'UP',
+    const isHealthy = dbStatus === 'UP';
+
+    res.status(isHealthy ? 200 : 503).json({
+      status: isHealthy ? 'UP' : 'DEGRADED',
       timestamp: new Date().toISOString(),
       service: 'RouteFill AI - Backend API',
+      database: { status: dbStatus, ...(dbError && ENV.NODE_ENV !== 'production' ? { error: dbError } : {}) },
       ml_service: mlHealth,
     });
   });
+
+  // Apply DoS rate limiter to all API endpoints
+  app.use('/api', globalRateLimiter);
 
   // Mount API resource routes
   app.use('/api', apiRouter);
@@ -54,3 +83,4 @@ export function createApp(): Application {
 }
 
 export const app = createApp();
+

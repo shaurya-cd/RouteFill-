@@ -30,7 +30,23 @@ RouteFillAi/
 └── test_e2e.ps1             # Automated 8-phase end-to-end integration test
 ```
 
-## Quick Start
+## Production Deployment with Docker Compose
+
+Deploy the entire RouteFill AI platform (PostgreSQL, Python ML Microservice, Node.js Backend API, and Web Canvas) with a single command:
+
+```bash
+docker-compose up --build -d
+```
+
+### Deployed Services:
+- **Web Canvas UI**: `http://localhost:3000`
+- **Backend API**: `http://localhost:5000/api`
+- **Backend Swagger Docs**: `http://localhost:5000/api/docs`
+- **Backend Health Check**: `http://localhost:5000/health`
+- **ML Microservice Docs**: `http://localhost:8000/docs`
+- **PostgreSQL Database**: `localhost:5432`
+
+## Local Development Quick Start
 
 ### 1. Database Setup (PostgreSQL)
 Ensure PostgreSQL is running on port 5432 with database `routefill_db`.
@@ -44,6 +60,8 @@ npm run seed
 ### 2. Start Python AI/ML Microservice
 ```powershell
 cd ml-service
+pip install -r requirements.txt
+python train_initial_models.py
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 Swagger UI: `http://127.0.0.1:8000/docs`
@@ -55,8 +73,16 @@ npm run dev
 ```
 Swagger UI: `http://localhost:5000/api/docs`
 
-### 4. Run End-to-End Automated Tests
+### 4. Start Web Canvas UI Frontend
+```powershell
+cd routefill-canvas
+npm install
+npm run dev
+```
+
+### 5. Run End-to-End Automated Tests
 ```powershell
 powershell -ExecutionPolicy Bypass -File test_e2e.ps1
 ```
 All 8 integration phases will execute and verify the full system automatically.
+

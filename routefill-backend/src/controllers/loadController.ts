@@ -138,7 +138,11 @@ export class LoadController {
         return;
       }
 
-      const carrierUser = req.user || { id: 2, name: 'Shaurya Transport' };
+      if (!req.user) {
+        res.status(401).json({ success: false, message: 'Authentication required to accept a load' });
+        return;
+      }
+      const carrierUser = req.user;
       const result = await loadService.acceptLoad(
         loadId,
         carrierUser,

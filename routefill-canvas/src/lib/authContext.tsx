@@ -6,7 +6,7 @@ interface AuthContextType {
   role: 'FLEET_OWNER' | 'ADMIN' | 'SHIPPER';
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password?: string) => Promise<UserProfile>;
+  login: (email: string, password: string) => Promise<UserProfile>;
   register: (payload: {
     name: string;
     email: string;
@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const login = async (email: string, password = 'password123'): Promise<UserProfile> => {
+  const login = async (email: string, password: string): Promise<UserProfile> => {
     setIsLoading(true);
     try {
       const res = await api.login(email, password);

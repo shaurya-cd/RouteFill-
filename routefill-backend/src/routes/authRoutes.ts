@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authController } from '../controllers/authController';
 import { authenticate } from '../middleware/authMiddleware';
 import { validateRequest } from '../middleware/validateMiddleware';
+import { authRateLimiter } from '../middleware/rateLimitMiddleware';
 import { registerSchema, loginSchema } from '../validators/authValidator';
 
 const router = Router();
@@ -13,7 +14,12 @@ const router = Router();
  *     summary: Register a new user
  *     tags: [Authentication]
  */
-router.post('/register', validateRequest({ body: registerSchema }), authController.register);
+router.post(
+  '/register',
+  authRateLimiter,
+  validateRequest({ body: registerSchema }),
+  authController.register
+);
 
 /**
  * @swagger
@@ -22,7 +28,12 @@ router.post('/register', validateRequest({ body: registerSchema }), authControll
  *     summary: Authenticate user credentials and retrieve JWT
  *     tags: [Authentication]
  */
-router.post('/login', validateRequest({ body: loginSchema }), authController.login);
+router.post(
+  '/login',
+  authRateLimiter,
+  validateRequest({ body: loginSchema }),
+  authController.login
+);
 
 /**
  * @swagger
