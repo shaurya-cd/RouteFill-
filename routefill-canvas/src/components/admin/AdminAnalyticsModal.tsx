@@ -15,6 +15,7 @@ import {
   Compass,
   Gauge,
   Sparkles,
+  Database,
 } from 'lucide-react';
 
 interface Props {
@@ -27,6 +28,7 @@ export const AdminAnalyticsModal: React.FC<Props> = ({ open, onOpenChange }) => 
   const [impact, setImpact] = useState<AiImpactAnalytics | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [retraining, setRetraining] = useState<boolean>(false);
+  const [seeding, setSeeding] = useState<boolean>(false);
   const [latestMetrics, setLatestMetrics] = useState<RetrainMetrics | null>(null);
 
   const fetchAnalytics = async () => {
@@ -64,18 +66,33 @@ export const AdminAnalyticsModal: React.FC<Props> = ({ open, onOpenChange }) => 
     }
   };
 
+  const handleSeedDatabase = async (force: boolean = false) => {
+    setSeeding(true);
+    try {
+      const res = await api.seedDatabase(force);
+      toast.success('Database Seeded Successfully!', {
+        description: res.message || 'Standard fleet trucks, Indian hubs, and marketplace loads populated.',
+      });
+      fetchAnalytics();
+    } catch (err: any) {
+      toast.error('Database seeding failed', { description: err.message });
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl rounded-3xl border-border bg-card p-6 shadow-2xl">
         <DialogHeader>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary">
-            <Cpu className="h-4 w-4" /> Phase 8 Continuous Retraining & Analytics
+            <Cpu className="h-4 w-4" /> Platform Administration & AI Intelligence
           </div>
           <DialogTitle className="font-display text-xl font-bold tracking-tight">
-            Platform AI Intelligence & Model Lifecycle
+            Platform AI Intelligence & Database Operations
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            Monitors platform deadhead savings, algorithm adoption, and triggers active Scikit-learn continuous learning.
+            Monitors platform deadhead savings, algorithm adoption, continuous model learning, and database seeding.
           </DialogDescription>
         </DialogHeader>
 
@@ -189,6 +206,46 @@ export const AdminAnalyticsModal: React.FC<Props> = ({ open, onOpenChange }) => 
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Database Seeding & State Operations */}
+            <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                    <Database className="h-3.5 w-3.5 text-primary" /> Database Catalog & Seeding
+                  </h4>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    Populates standard Indian logistics hubs, truck types, demo carriers (Shaurya Transport), and live market loads.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => handleSeedDatabase(false)}
+                    disabled={seeding}
+                    variant="outline"
+                    className="rounded-xl text-xs border-border shrink-0"
+                  >
+                    {seeding ? (
+                      <>
+                        <RefreshCw className="h-3 w-3 mr-1.5 animate-spin" /> Seeding...
+                      </>
+                    ) : (
+                      <>
+                        <Database className="h-3 w-3 mr-1.5" /> Seed Dataset
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    onClick={() => handleSeedDatabase(true)}
+                    disabled={seeding}
+                    variant="destructive"
+                    className="rounded-xl text-xs shrink-0"
+                  >
+                    Reset & Reseed
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         )}

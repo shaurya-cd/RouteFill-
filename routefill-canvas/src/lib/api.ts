@@ -683,6 +683,13 @@ class ApiClient {
     return res.data;
   }
 
+  async seedDatabase(force: boolean = false): Promise<{ success: boolean; message: string; data?: any }> {
+    return this.request('/seed', {
+      method: 'POST',
+      body: JSON.stringify({ force }),
+    });
+  }
+
   // ==========================================
   // [9/9] Notifications, Chat & Load Acceptance
   // ==========================================

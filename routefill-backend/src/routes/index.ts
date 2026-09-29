@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Location, TruckType } from '../models';
+import { seedDatabase } from '../seeders/seed';
 import authRoutes from './authRoutes';
 import truckRoutes from './truckRoutes';
 import loadRoutes from './loadRoutes';
@@ -11,6 +12,24 @@ import notificationRoutes from './notificationRoutes';
 import chatRoutes from './chatRoutes';
 
 const apiRouter = Router();
+
+/**
+ * Public & Admin Seed Endpoints
+ * Populates all standard reference data, Indian hubs, test fleet trucks, and active marketplace loads.
+ */
+apiRouter.all('/seed', async (req, res, next) => {
+  try {
+    const force = req.body?.force === true || req.query?.force === 'true';
+    const result = await seedDatabase(force);
+    res.status(200).json({
+      success: true,
+      message: 'RouteFill AI database seeded and verified successfully.',
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 apiRouter.get('/locations', async (req, res, next) => {
   try {

@@ -16,15 +16,19 @@ async function startServer() {
     // Initialize relational associations
     setupAssociations();
 
-    // Sync database schema when enabled (safe alter in development)
+    // Sync database schema when enabled (safe sync in cloud / production)
     if (ENV.DB_SYNC) {
-      await sequelize.sync({ alter: true });
-      logger.info('Database models synchronized with PostgreSQL schema.');
+      try {
+        await sequelize.sync();
+        logger.info('Database models synchronized with PostgreSQL schema.');
+      } catch (syncErr: any) {
+        logger.warn('Initial schema sync warning (non-fatal):', syncErr?.message);
+      }
     } else {
       logger.info('Database schema auto-sync skipped (production mode).');
     }
 
-    // Automatically seed necessary catalog data (Truck Types, Hub Locations, Roles) if empty
+    // Automatically seed necessary catalog data (Truck Types, Hub Locations, Roles, Trucks, Loads) if empty
     await autoSeedIfEmpty();
 
     const server = app.listen(ENV.PORT, () => {
@@ -47,7 +51,7 @@ async function startServer() {
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT', () => shutdown('SIGINT'));
   } catch (error: any) {
-    logger.error('Fatal error during server startup:', error.message);
+    logger.error('Fatal error during server startup:', error?.message || error);
     process.exit(1);
   }
 }

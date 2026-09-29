@@ -97,11 +97,25 @@ function Index() {
   // Fetch initial fleet and market data
   const fetchData = useCallback(async () => {
     try {
-      const [trucksData, loadsData, locsData] = await Promise.all([
+      let [trucksData, loadsData, locsData] = await Promise.all([
         api.getTrucks().catch(() => []),
         api.getLoads().catch(() => []),
         api.getLocations().catch(() => []),
       ]);
+
+      // If database is completely empty on first boot, trigger one-time auto-seed
+      if (trucksData.length === 0 && loadsData.length === 0 && locsData.length === 0) {
+        try {
+          await api.seedDatabase();
+          [trucksData, loadsData, locsData] = await Promise.all([
+            api.getTrucks().catch(() => []),
+            api.getLoads().catch(() => []),
+            api.getLocations().catch(() => []),
+          ]);
+        } catch (seedErr) {
+          console.warn("Client initial seed trigger warning:", seedErr);
+        }
+      }
 
       setTrucks(trucksData);
       setLoads(loadsData);
