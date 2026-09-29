@@ -13,10 +13,17 @@ import { TripStatusHistory } from './TripStatusHistory';
 import { Notification } from './Notification';
 import { ChatMessage } from './ChatMessage';
 
+let associationsInitialized = false;
+
 /**
  * Defines all relational entity associations ensuring referential integrity and clean 3NF navigation.
  */
 export function setupAssociations(): void {
+  if (associationsInitialized) {
+    return;
+  }
+  associationsInitialized = true;
+
   // Users & Roles (Many-to-Many via UserRole)
   User.belongsToMany(Role, { through: UserRole, foreignKey: 'user_id', otherKey: 'role_id', as: 'roles' });
   Role.belongsToMany(User, { through: UserRole, foreignKey: 'role_id', otherKey: 'user_id', as: 'users' });
