@@ -17,7 +17,7 @@ const apiRouter = Router();
  * Public & Admin Seed Endpoints
  * Populates all standard reference data, Indian hubs, test fleet trucks, and active marketplace loads.
  */
-apiRouter.all('/seed', async (req, res, next) => {
+apiRouter.all('/seed', async (req, res) => {
   try {
     const force = req.body?.force === true || req.query?.force === 'true';
     const result = await seedDatabase(force);
@@ -26,8 +26,17 @@ apiRouter.all('/seed', async (req, res, next) => {
       message: 'RouteFill AI database seeded and verified successfully.',
       data: result,
     });
-  } catch (err) {
-    next(err);
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err?.message || 'Database seeding error',
+      error: {
+        name: err?.name,
+        message: err?.message,
+        details: err?.original?.message || err?.parent?.message || err?.errors,
+        stack: err?.stack,
+      },
+    });
   }
 });
 
